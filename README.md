@@ -1,6 +1,6 @@
-# assados_na_brasa_mobile
+# Assados na Brasa - Mobile
 
-A new Flutter project.
+Atualização da apliacção para web para o estabelecimento Assados na Brasa.  O app mobile contará com quase todas as funções da versão web exceto o controle de inadimplência.
 
 ## Getting Started
 

@@ -16,14 +16,25 @@ class Usuario {
   });
 
   factory Usuario.fromMap(Map<String, dynamic> map) {
+    String readString(String key) => map[key]?.toString() ?? '';
+
     return Usuario(
-      id: map['id'],
-      nome: map['nome'],
-      login: map['login'],
-      senha: map['senha'],
-      tipoUsuario: map['tipo_usuario'],
-      status: map['status'],
+      id: (map['id'] as num?)?.toInt(),
+      nome: readString('nome'),
+      login: readString('login'),
+      senha: readString('senha'),
+      tipoUsuario: readString('tipo_usuario'),
+      status: readString('status'),
     );
+  }
+
+  bool get ativo {
+    final normalized = status.trim().toUpperCase();
+    return normalized.isEmpty ||
+        normalized == 'A' ||
+        normalized == 'ATIVO' ||
+        normalized == '1' ||
+        normalized == 'S';
   }
 
   Map<String, dynamic> toMap() {

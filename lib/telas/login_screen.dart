@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/usuario.dart';
 import '../repositories/usuario_repository.dart';
+import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -41,11 +42,12 @@ class _LoginScreenState extends State<LoginScreen> {
         return;
       }
 
-      _mostrarMensagem('Bem-vindo, ${usuario.nome}!');
-
-      // Depois vamos trocar isso pela HomeScreen
-      // Navigator.pushReplacement(...)
-
+      await Navigator.of(context).pushReplacement(
+        MaterialPageRoute<void>(builder: (_) => HomeScreen(usuario: usuario)),
+      );
+    } on UsuarioRepositoryException catch (e) {
+      if (!mounted) return;
+      _mostrarMensagem(e.message);
     } catch (e) {
       if (!mounted) return;
       _mostrarMensagem('Erro ao realizar login: $e');
@@ -59,9 +61,9 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _mostrarMensagem(String mensagem) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(mensagem)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(mensagem)));
   }
 
   @override
@@ -90,16 +92,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   const Text(
                     'Assados na Brasa',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
 
                   const SizedBox(height: 24),
 
                   TextField(
                     controller: _loginController,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    autofillHints: const [AutofillHints.username],
                     decoration: const InputDecoration(
                       labelText: 'Login',
                       border: OutlineInputBorder(),
@@ -112,6 +114,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextField(
                     controller: _senhaController,
                     obscureText: true,
+                    textInputAction: TextInputAction.done,
+                    autofillHints: const [AutofillHints.password],
+                    onSubmitted: (_) => _carregando ? null : _entrar(),
                     decoration: const InputDecoration(
                       labelText: 'Senha',
                       border: OutlineInputBorder(),
@@ -131,9 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         foregroundColor: Colors.white,
                       ),
                       child: _carregando
-                          ? const CircularProgressIndicator(
-                              color: Colors.white,
-                            )
+                          ? const CircularProgressIndicator(color: Colors.white)
                           : const Text('ACESSAR'),
                     ),
                   ),

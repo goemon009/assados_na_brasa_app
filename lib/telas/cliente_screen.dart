@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/cliente.dart';
 import '../repositories/cliente_repository.dart';
+import 'cliente_form_screen.dart';
 
 class ClientesScreen extends StatefulWidget {
   const ClientesScreen({super.key});
@@ -92,8 +93,17 @@ class _ClientesScreenState extends State<ClientesScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color(0xFF8FA55A),
         foregroundColor: Colors.white,
-        onPressed: () {
-          // Depois vamos abrir ClienteFormScreen
+        onPressed: () async {
+          final resultado = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const ClienteFormScreen(),
+            ),
+          );
+
+          if (resultado == true) {
+            _carregarClientes();
+          }
         },
         child: const Icon(Icons.add),
       ),
@@ -122,7 +132,16 @@ class _ClientesScreenState extends State<ClientesScreen> {
                         trailing: PopupMenuButton<String>(
                           onSelected: (value) {
                             if (value == 'editar') {
-                              // Depois vamos abrir ClienteFormScreen em modo edição
+                              final resultado = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => ClienteFormScreen(cliente: cliente),
+                                ),
+                              );
+
+                              if (resultado == true) {
+                                _carregarClientes();
+                              }
                             } else if (value == 'excluir') {
                               _confirmarExclusao(cliente);
                             }

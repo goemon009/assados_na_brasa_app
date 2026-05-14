@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/usuario.dart';
 import 'login_screen.dart';
+import 'cliente_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, this.usuario});
@@ -24,7 +25,9 @@ class _HomeScreenState extends State<HomeScreen> {
       if (!mounted) return;
 
       await Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute<void>(builder: (_) => const LoginScreen()),
+        MaterialPageRoute<void>(
+          builder: (_) => const LoginScreen(),
+        ),
         (route) => false,
       );
     } finally {
@@ -39,14 +42,19 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final Usuario? usuario = widget.usuario;
-    final String nomeExibicao = usuario?.nome.trim().isNotEmpty == true
-        ? usuario!.nome.trim()
-        : 'Usuário';
-    final String loginExibicao = usuario?.login.trim().isNotEmpty == true
-        ? usuario!.login.trim()
-        : 'Sem identificação';
+
+    final String nomeExibicao =
+        usuario?.nome.trim().isNotEmpty == true
+            ? usuario!.nome.trim()
+            : 'Usuário';
+
+    final String loginExibicao =
+        usuario?.login.trim().isNotEmpty == true
+            ? usuario!.login.trim()
+            : 'Sem identificação';
 
     return Scaffold(
+      backgroundColor: const Color(0xFFF4F2EE),
       appBar: AppBar(
         title: const Text('Assados na Brasa'),
         backgroundColor: const Color(0xFF8FA55A),
@@ -63,8 +71,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.white,
                     ),
                   )
-                : const Icon(Icons.logout, color: Colors.white),
-            label: const Text('Sair', style: TextStyle(color: Colors.white)),
+                : const Icon(
+                    Icons.logout,
+                    color: Colors.white,
+                  ),
+            label: const Text(
+              'Sair',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -74,6 +88,10 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(24),
                 child: Column(
@@ -82,12 +100,118 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Text(
                       'Bem-vindo, $nomeExibicao',
-                      style: Theme.of(context).textTheme.headlineSmall,
+                      style:
+                          Theme.of(context).textTheme.headlineSmall,
                     ),
+
                     const SizedBox(height: 16),
-                    Text('Acesso: $loginExibicao'),
+
+                    Text(
+                      'Acesso: $loginExibicao',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+
                     const SizedBox(height: 8),
-                    Text('Origem da autenticação: tabela usuarios'),
+
+                    const Text(
+                      'Origem da autenticação: tabela usuarios',
+                    ),
+
+                    const SizedBox(height: 32),
+
+                    // BOTÃO CLIENTES
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  const ClientesScreen(),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.people),
+                        label: const Text('Clientes'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color(0xFF8FA55A),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 16,
+                          ),
+                          textStyle: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // BOTÃO PRODUTOS
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          // futura tela de produtos
+                        },
+                        icon: const Icon(Icons.inventory_2),
+                        label: const Text('Produtos'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color(0xFF8FA55A),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 16,
+                          ),
+                          textStyle: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // BOTÃO VENDAS
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          // futura tela de vendas
+                        },
+                        icon: const Icon(Icons.shopping_cart),
+                        label: const Text('Vendas'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color(0xFF8FA55A),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 16,
+                          ),
+                          textStyle: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

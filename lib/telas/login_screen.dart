@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/usuario.dart';
 import '../repositories/usuario_repository.dart';
+import '../widgets/app_logo.dart';
 import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -82,6 +83,8 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: const EdgeInsets.all(24),
           child: Card(
             elevation: 6,
+            color: Colors.white,
+            surfaceTintColor: Colors.transparent,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
@@ -90,9 +93,16 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  const Center(
+                    child: AppLogo(width: 170),
+                  ),
+
+                  const SizedBox(height: 16),
+
                   const Text(
                     'Assados na Brasa',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
                   ),
 
                   const SizedBox(height: 24),

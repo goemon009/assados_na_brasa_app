@@ -11,9 +11,15 @@ class ClienteRepository {
             .select()
             .order('nome');
 
-        return (response as List)
+        final clientes = (response as List)
             .map((cliente) => Cliente.fromMap(cliente))
             .toList();
+
+        clientes.sort(
+            (a, b) => a.nome.toLowerCase().compareTo(b.nome.toLowerCase()),
+        );
+
+        return clientes;
     }
 
     //Cadastrar Cliente

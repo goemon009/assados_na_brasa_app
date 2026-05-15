@@ -87,7 +87,7 @@ class _ClientesScreenState extends State<ClientesScreen> {
       backgroundColor: const Color(0xFFF4F2EE),
       appBar: AppBar(
         title: const Text('Clientes'),
-        backgroundColor: const Color(0xFF4F4B46),
+        backgroundColor: const Color(0xFF8FA55A),
         foregroundColor: Colors.white,
       ),
       floatingActionButton: FloatingActionButton(

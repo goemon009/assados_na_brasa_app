@@ -30,6 +30,7 @@ class Usuario {
 
   bool get ativo {
     final normalized = status.trim().toUpperCase();
+
     return normalized.isEmpty ||
         normalized == 'A' ||
         normalized == 'ATIVO' ||
@@ -37,9 +38,12 @@ class Usuario {
         normalized == 'S';
   }
 
+  bool get administrador {
+    return tipoUsuario.trim().toUpperCase() == 'A';
+  }
+
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'nome': nome,
       'login': login,
       'senha': senha,

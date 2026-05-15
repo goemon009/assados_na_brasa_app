@@ -12,7 +12,7 @@ class ClienteRepository {
             .order('nome');
 
         return (response as List)
-            .map((map) => Cliente.fromMap(cliente))
+            .map((cliente) => Cliente.fromMap(cliente))
             .toList();
     }
 
@@ -25,10 +25,14 @@ class ClienteRepository {
 
     //Atualizar Cliente
     Future<void> atualizarCliente(Cliente cliente) async {
+        if (cliente.id == null) {
+            throw ArgumentError('Cliente sem id não pode ser atualizado.');
+        }
+
         await _supabase
             .from('clientes')
             .update(cliente.toMap())
-            .eq('id', cliente.id);
+            .eq('id', cliente.id!);
     }
 
     //Excluir Cliente

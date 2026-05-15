@@ -42,3 +42,9 @@ android {
 flutter {
     source = "../.."
 }
+
+tasks.configureEach {
+    if (name.startsWith("merge") && name.endsWith("Resources")) {
+        outputs.upToDateWhen { false }
+    }
+}

@@ -6,9 +6,8 @@ allprojects {
 }
 
 val newBuildDir: Directory =
-    rootProject.layout.buildDirectory
-        .dir("../../build")
-        .get()
+    rootProject.layout.projectDirectory
+        .dir("../../../../../../AppData/Local/Temp/assados_na_brasa_android_build")
 rootProject.layout.buildDirectory.value(newBuildDir)
 
 subprojects {

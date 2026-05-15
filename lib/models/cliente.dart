@@ -3,7 +3,7 @@ class Cliente {
     final String nome;
     final String? cpf;
     final String? telefone;
-    final String? edereco;
+    final String? endereco;
     final String status;
 
     Cliente({
@@ -11,7 +11,7 @@ class Cliente {
         required this.nome,
         this.cpf,
         this.telefone,
-        this.edereco,
+        this.endereco,
         required this.status,
     });
 
@@ -21,9 +21,9 @@ class Cliente {
             nome: map['nome'],
             cpf: map['cpf'],
             telefone: map['telefone'],
-            edereco: map['edereco'],
+            endereco: map['endereco'],
             status: map['status'],
-        )
+        );
     }
 
     Map<String, dynamic> toMap() {
@@ -31,7 +31,7 @@ class Cliente {
             'nome': nome,
             'cpf': cpf,
             'telefone': telefone,
-            'edereco': edereco,
+            'endereco': endereco,
             'status': status,
         };
     }

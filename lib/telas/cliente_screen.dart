@@ -130,7 +130,7 @@ class _ClientesScreenState extends State<ClientesScreen> {
                         ),
                         isThreeLine: true,
                         trailing: PopupMenuButton<String>(
-                          onSelected: (value) {
+                          onSelected: (value) async {
                             if (value == 'editar') {
                               final resultado = await Navigator.push(
                                 context,

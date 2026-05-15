@@ -25,9 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (!mounted) return;
 
       await Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute<void>(
-          builder: (_) => const LoginScreen(),
-        ),
+        MaterialPageRoute<void>(builder: (_) => const LoginScreen()),
         (route) => false,
       );
     } finally {
@@ -43,15 +41,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final Usuario? usuario = widget.usuario;
 
-    final String nomeExibicao =
-        usuario?.nome.trim().isNotEmpty == true
-            ? usuario!.nome.trim()
-            : 'Usuário';
-
-    final String loginExibicao =
-        usuario?.login.trim().isNotEmpty == true
-            ? usuario!.login.trim()
-            : 'Sem identificação';
+    final String nomeExibicao = usuario?.nome.trim().isNotEmpty == true
+        ? usuario!.nome.trim()
+        : 'Usuário';
 
     return Scaffold(
       backgroundColor: const Color(0xFFF4F2EE),
@@ -59,28 +51,6 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Assados na Brasa'),
         backgroundColor: const Color(0xFF8FA55A),
         foregroundColor: Colors.white,
-        actions: [
-          TextButton.icon(
-            onPressed: _saindo ? null : _sair,
-            icon: _saindo
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
-                  )
-                : const Icon(
-                    Icons.logout,
-                    color: Colors.white,
-                  ),
-            label: const Text(
-              'Sair',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
       ),
       body: Center(
         child: ConstrainedBox(
@@ -100,21 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Text(
                       'Bem-vindo, $nomeExibicao',
-                      style:
-                          Theme.of(context).textTheme.headlineSmall,
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    Text(
-                      'Acesso: $loginExibicao',
-                      style: const TextStyle(fontSize: 16),
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    const Text(
-                      'Origem da autenticação: tabela usuarios',
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
 
                     const SizedBox(height: 32),
@@ -127,27 +83,22 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) =>
-                                  const ClientesScreen(),
+                              builder: (_) => const ClientesScreen(),
                             ),
                           );
                         },
                         icon: const Icon(Icons.people),
                         label: const Text('Clientes'),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color(0xFF8FA55A),
+                          backgroundColor: const Color(0xFF8FA55A),
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 16,
-                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
                           textStyle: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                           shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(12),
                           ),
                         ),
                       ),
@@ -165,19 +116,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         icon: const Icon(Icons.inventory_2),
                         label: const Text('Produtos'),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color(0xFF8FA55A),
+                          backgroundColor: const Color(0xFF8FA55A),
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 16,
-                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
                           textStyle: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                           shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(12),
                           ),
                         ),
                       ),
@@ -195,19 +142,46 @@ class _HomeScreenState extends State<HomeScreen> {
                         icon: const Icon(Icons.shopping_cart),
                         label: const Text('Vendas'),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color(0xFF8FA55A),
+                          backgroundColor: const Color(0xFF8FA55A),
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 16,
-                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
                           textStyle: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                           shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 32),
+
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: _saindo ? null : _sair,
+                        icon: _saindo
+                            ? const SizedBox(
+                                width: 16,
+                                height: 16,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Icon(Icons.logout),
+                        label: Text(_saindo ? 'Saindo...' : 'Sair'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: const Color(0xFF8FA55A),
+                          side: const BorderSide(color: Color(0xFF8FA55A)),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          textStyle: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
                         ),
                       ),

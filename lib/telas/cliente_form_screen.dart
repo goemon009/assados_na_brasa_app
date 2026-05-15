@@ -113,7 +113,7 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
       backgroundColor: const Color(0xFFF4F2EE),
       appBar: AppBar(
         title: Text(_editando ? 'Editar Cliente' : 'Novo Cliente'),
-        backgroundColor: const Color(0xFF4F4B46),
+        backgroundColor: const Color(0xFF8FA55A),
         foregroundColor: Colors.white,
       ),
       body: Center(

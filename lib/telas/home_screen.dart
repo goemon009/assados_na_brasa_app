@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../models/usuario.dart';
+import '../widgets/app_logo.dart';
 import 'login_screen.dart';
 import 'cliente_screen.dart';
+import 'produtos_screen.dart';
+import 'usuarios_screen.dart';
+import 'vendas_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, this.usuario});
@@ -48,7 +52,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF4F2EE),
       appBar: AppBar(
-        title: const Text('Assados na Brasa'),
         backgroundColor: const Color(0xFF8FA55A),
         foregroundColor: Colors.white,
       ),
@@ -59,6 +62,8 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.all(24),
             child: Card(
               elevation: 4,
+              color: Colors.white,
+              surfaceTintColor: Colors.transparent,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -66,14 +71,56 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.all(24),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    const Center(
+                      child: AppLogo(width: 150),
+                    ),
+
+                    const SizedBox(height: 20),
+
                     Text(
                       'Bem-vindo, $nomeExibicao',
                       style: Theme.of(context).textTheme.headlineSmall,
+                      textAlign: TextAlign.center,
                     ),
 
                     const SizedBox(height: 32),
+
+                    // BOTÃO USUÁRIOS (somente admin)
+                    if (usuario?.administrador == true) ...[
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => UsuariosScreen(
+                                  usuarioLogado: usuario!,
+                                ),
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.admin_panel_settings),
+                          label: const Text('Usuários'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF8FA55A),
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            textStyle: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 16),
+                    ],
 
                     // BOTÃO CLIENTES
                     SizedBox(
@@ -111,7 +158,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: double.infinity,
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          // futura tela de produtos
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const ProdutosScreen(),
+                            ),
+                          );
                         },
                         icon: const Icon(Icons.inventory_2),
                         label: const Text('Produtos'),
@@ -137,7 +189,23 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: double.infinity,
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          // futura tela de vendas
+                          if (usuario == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Usuário logado não encontrado.',
+                                ),
+                              ),
+                            );
+                            return;
+                          }
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => VendasScreen(usuario: usuario),
+                            ),
+                          );
                         },
                         icon: const Icon(Icons.shopping_cart),
                         label: const Text('Vendas'),
@@ -174,7 +242,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         label: Text(_saindo ? 'Saindo...' : 'Sair'),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: const Color(0xFF8FA55A),
-                          side: const BorderSide(color: Color(0xFF8FA55A)),
+                          side: const BorderSide(
+                            color: Color(0xFF8FA55A),
+                          ),
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           textStyle: const TextStyle(
                             fontSize: 16,

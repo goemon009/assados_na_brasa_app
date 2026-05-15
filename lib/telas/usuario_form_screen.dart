@@ -1,67 +1,72 @@
 import 'package:flutter/material.dart';
 
-import '../models/produto.dart';
-import '../repositories/produto_repository.dart';
+import '../models/usuario.dart';
+import '../repositories/usuario_repository.dart';
 
-class ProdutoFormScreen extends StatefulWidget {
-  const ProdutoFormScreen({
+class UsuarioFormScreen extends StatefulWidget {
+  const UsuarioFormScreen({
     super.key,
-    this.produto,
+    this.usuario,
   });
 
-  final Produto? produto;
+  final Usuario? usuario;
 
   @override
-  State<ProdutoFormScreen> createState() => _ProdutoFormScreenState();
+  State<UsuarioFormScreen> createState() => _UsuarioFormScreenState();
 }
 
-class _ProdutoFormScreenState extends State<ProdutoFormScreen> {
-  final ProdutoRepository _repository = ProdutoRepository();
+class _UsuarioFormScreenState extends State<UsuarioFormScreen> {
+  final UsuarioRepository _repository = UsuarioRepository();
 
   final _formKey = GlobalKey<FormState>();
 
   final _nomeController = TextEditingController();
-  final _precoController = TextEditingController();
-  final _estoqueController = TextEditingController();
+  final _loginController = TextEditingController();
+  final _senhaController = TextEditingController();
+
+  String _tipoUsuario = 'O';
+  String _status = 'ATIVO';
 
   bool _salvando = false;
 
-  bool get _editando => widget.produto != null;
+  bool get _editando => widget.usuario != null;
 
   @override
   void initState() {
     super.initState();
 
     if (_editando) {
-      final produto = widget.produto!;
+      final usuario = widget.usuario!;
 
-      _nomeController.text = produto.nomeProduto;
-      _precoController.text = produto.preco.toStringAsFixed(2);
-      _estoqueController.text = produto.estoque.toString();
+      _nomeController.text = usuario.nome;
+      _loginController.text = usuario.login;
+      _senhaController.text = usuario.senha;
+      _tipoUsuario = usuario.tipoUsuario;
+      _status = usuario.status;
     }
   }
 
   Future<void> _salvar() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
+    if (!_formKey.currentState!.validate()) return;
 
     setState(() {
       _salvando = true;
     });
 
     try {
-      final produto = Produto(
-        id: widget.produto?.id,
-        nomeProduto: _nomeController.text.trim(),
-        preco: double.parse(_precoController.text.replaceAll(',', '.')),
-        estoque: int.parse(_estoqueController.text),
+      final usuario = Usuario(
+        id: widget.usuario?.id,
+        nome: _nomeController.text.trim(),
+        login: _loginController.text.trim(),
+        senha: _senhaController.text.trim(),
+        tipoUsuario: _tipoUsuario,
+        status: _status,
       );
 
       if (_editando) {
-        await _repository.atualizarProduto(produto);
+        await _repository.atualizarUsuario(usuario);
       } else {
-        await _repository.cadastrarProduto(produto);
+        await _repository.cadastrarUsuario(usuario);
       }
 
       if (!mounted) return;
@@ -70,14 +75,14 @@ class _ProdutoFormScreenState extends State<ProdutoFormScreen> {
         SnackBar(
           content: Text(
             _editando
-                ? 'Produto atualizado com sucesso.'
-                : 'Produto cadastrado com sucesso.',
+                ? 'Usuário atualizado com sucesso.'
+                : 'Usuário cadastrado com sucesso.',
           ),
         ),
       );
 
       Navigator.pop(context, true);
-    } on ProdutoRepositoryException catch (e) {
+    } on UsuarioRepositoryException catch (e) {
       if (!mounted) return;
 
       ScaffoldMessenger.of(
@@ -87,7 +92,7 @@ class _ProdutoFormScreenState extends State<ProdutoFormScreen> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao salvar produto: $e')),
+        SnackBar(content: Text('Erro ao salvar usuário: $e')),
       );
     } finally {
       if (mounted) {
@@ -101,8 +106,8 @@ class _ProdutoFormScreenState extends State<ProdutoFormScreen> {
   @override
   void dispose() {
     _nomeController.dispose();
-    _precoController.dispose();
-    _estoqueController.dispose();
+    _loginController.dispose();
+    _senhaController.dispose();
     super.dispose();
   }
 
@@ -111,7 +116,7 @@ class _ProdutoFormScreenState extends State<ProdutoFormScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF4F2EE),
       appBar: AppBar(
-        title: Text(_editando ? 'Editar Produto' : 'Novo Produto'),
+        title: Text(_editando ? 'Editar Usuário' : 'Novo Usuário'),
         backgroundColor: const Color(0xFF8FA55A),
         foregroundColor: Colors.white,
       ),
@@ -122,6 +127,8 @@ class _ProdutoFormScreenState extends State<ProdutoFormScreen> {
             constraints: const BoxConstraints(maxWidth: 520),
             child: Card(
               elevation: 4,
+              color: Colors.white,
+              surfaceTintColor: Colors.transparent,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -134,13 +141,13 @@ class _ProdutoFormScreenState extends State<ProdutoFormScreen> {
                       TextFormField(
                         controller: _nomeController,
                         decoration: const InputDecoration(
-                          labelText: 'Nome do produto',
+                          labelText: 'Nome completo',
                           border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.inventory_2),
+                          prefixIcon: Icon(Icons.person),
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return 'Informe o nome do produto.';
+                            return 'Informe o nome.';
                           }
                           return null;
                         },
@@ -149,32 +156,16 @@ class _ProdutoFormScreenState extends State<ProdutoFormScreen> {
                       const SizedBox(height: 16),
 
                       TextFormField(
-                        controller: _precoController,
-                        keyboardType: const TextInputType.numberWithOptions(
-                          decimal: true,
-                        ),
+                        controller: _loginController,
                         decoration: const InputDecoration(
-                          labelText: 'Preço',
+                          labelText: 'Login',
                           border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.attach_money),
+                          prefixIcon: Icon(Icons.account_circle),
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return 'Informe o preço.';
+                            return 'Informe o login.';
                           }
-
-                          final preco = double.tryParse(
-                            value.replaceAll(',', '.'),
-                          );
-
-                          if (preco == null) {
-                            return 'Informe um preço válido.';
-                          }
-
-                          if (preco < 0) {
-                            return 'O preço não pode ser negativo.';
-                          }
-
                           return null;
                         },
                       ),
@@ -182,29 +173,70 @@ class _ProdutoFormScreenState extends State<ProdutoFormScreen> {
                       const SizedBox(height: 16),
 
                       TextFormField(
-                        controller: _estoqueController,
-                        keyboardType: TextInputType.number,
+                        controller: _senhaController,
+                        obscureText: true,
                         decoration: const InputDecoration(
-                          labelText: 'Quantidade em estoque',
+                          labelText: 'Senha',
                           border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.storage),
+                          prefixIcon: Icon(Icons.lock),
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return 'Informe a quantidade em estoque.';
+                            return 'Informe a senha.';
                           }
-
-                          final estoque = int.tryParse(value);
-
-                          if (estoque == null) {
-                            return 'Informe uma quantidade em estoque válida.';
-                          }
-
-                          if (estoque < 0) {
-                            return 'A quantidade em estoque não pode ser negativa.';
-                          }
-
                           return null;
+                        },
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      DropdownButtonFormField<String>(
+                        value: _tipoUsuario,
+                        decoration: const InputDecoration(
+                          labelText: 'Tipo de usuário',
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.admin_panel_settings),
+                        ),
+                        items: const [
+                          DropdownMenuItem(
+                            value: 'O',
+                            child: Text('Operador'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'A',
+                            child: Text('Administrador'),
+                          ),
+                        ],
+                        onChanged: (value) {
+                          setState(() {
+                            _tipoUsuario = value ?? 'O';
+                          });
+                        },
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      DropdownButtonFormField<String>(
+                        value: _status,
+                        decoration: const InputDecoration(
+                          labelText: 'Status',
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.toggle_on),
+                        ),
+                        items: const [
+                          DropdownMenuItem(
+                            value: 'ATIVO',
+                            child: Text('ATIVO'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'INATIVO',
+                            child: Text('INATIVO'),
+                          ),
+                        ],
+                        onChanged: (value) {
+                          setState(() {
+                            _status = value ?? 'ATIVO';
+                          });
                         },
                       ),
 
@@ -230,7 +262,7 @@ class _ProdutoFormScreenState extends State<ProdutoFormScreen> {
                                 ? 'Salvando...'
                                 : _editando
                                     ? 'Salvar Alterações'
-                                    : 'Cadastrar Produto',
+                                    : 'Cadastrar Usuário',
                           ),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF8FA55A),
